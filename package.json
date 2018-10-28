@@ -1,0 +1,28 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "Bamazon, not Amazon",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shankstee/Bamazon.git"
+  },
+  "keywords": [
+    "mySQL",
+    "JavaScript",
+    "bootcamp"
+  ],
+  "author": "Trae Shanks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shankstee/Bamazon/issues"
+  },
+  "homepage": "https://github.com/shankstee/Bamazon#readme",
+  "dependencies": {
+    "inquirer": "^6.2.0",
+    "mysql": "^2.16.0"
+  }
+}
