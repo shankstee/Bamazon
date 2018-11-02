@@ -18,11 +18,11 @@ var connection = mysql.createConnection({ // establish a connection with local d
 connection.connect(function(err) { // Check if connection to database was sucsessful or not. 
   if (err) throw err;
   console.log("Connected");
-  afterConnection();
-  connection.end();
+  showMenu();
 });
 
-function afterConnection() {
+
+function showMenu() { // function to display the menu of what is avaliable
   connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
     console.log("----------These Products 4 Sale---------");
@@ -36,7 +36,7 @@ function afterConnection() {
 
 function askWhatToBuy() {
   inquirer
-    .prompt(
+    .prompt([
       {
       name: "askItem",
       type: "input",
@@ -44,28 +44,41 @@ function askWhatToBuy() {
       },
       {
         name: "howMany",
-        type: "list",
+        type: "input",
         message: "How many would you like ?"
       }
     
-    )
+    ])
     .then(function(answer) {
-      switch (answer.askItem) {
-      case "Find songs by artist":
-        artistSearch();
-        break;
 
-      case "Find all artists who appear more than once":
-        multiSearch();
-        break;
+      var itemToBuy = answer.askItem; // the item the user wants to buy
+      var thisMany = answer.howMany; // How many of that item the user wants to buy
 
-      case "Find data within a specific range":
-        rangeSearch();
-        break;
+    
 
-      case "Search for a specific song":
-        songSearch();
-        break;
-      }
+        var query = connection.query("SELECT * FROM products WHERE item_id=?", [itemToBuy], function(err, res) {
+          if (res[0].stock_quantity < parseInt(thisMany)) { // if the result the user guesses stock quantitiy is less than the amount the user wants
+            console.log("Bamazon currently does not have that many in stock..");
+          } else {
+            console.log("Your Order is complete");
+            connection.query("UPDATE products SET ? WHERE ?", [
+              {
+                stock_quantity: res[0].stock_quantity - parseInt(thisMany)
+            },
+            {
+              item_id: itemToBuy
+            }
+
+          ],function(err, result) {
+            
+            console.log("The price of " + thisMany + " " + res[0].product_name + "s" + " is " +  res[0].price * parseInt(thisMany) + " dollars each.");
+
+            connection.end();
+              
+            })
+          }
+        });
+      
     });
+    
 }
